@@ -3,29 +3,30 @@ var heroes;
 var accountId = "65406320";
 
 $ ( document ).ready(function() {
-    main();
+    loadData();
 });
 
+function loadData() {
+    $.when(
+        $.getJSON('playerdata.json', function(json) {
+            matches = json.matches;
+            console.log(matches);
+        }),
+        $.getJSON('herodata.json', function(json) {
+            heroes = json.heroes;
+            console.log(heroes);
+        })
+    ).then(
+        main();
+    )
+}
 
 function main() {
     console.log("We are ready!");
-    loadData();
 
     for (var i = 0; i < 10; i++) {
         getHeroForMatch(matches[i]);
     }
-}
-
-function loadData() {
-    $.getJSON('playerdata.json', function(json) {
-        matches = json.matches;
-        console.log(matches);
-    })
-
-    $.getJSON('herodata.json', function(json) {
-        heroes = json.heroes;
-        console.log(heroes);
-    })
 }
 
 function getHeroForMatch(match) {
