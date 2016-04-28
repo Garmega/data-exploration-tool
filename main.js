@@ -17,8 +17,8 @@ function loadData() {
             console.log(heroes);
         })
     ).then(
-        main();
-    )
+        main()
+    );
 }
 
 function main() {
