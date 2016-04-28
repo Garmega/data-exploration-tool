@@ -40,7 +40,7 @@ function getHeroForMatch(match) {
 
 function getHeroById(id) {
     return $.grep(heroes, function(n,i) {
-        return n.id == 86
+        return n.id == id
     });
 }
 
