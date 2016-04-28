@@ -16,9 +16,9 @@ function loadData() {
             heroes = json.heroes;
             console.log(heroes);
         })
-    ).then(
-        main()
-    );
+    ).then(function() {
+        main();
+    });
 }
 
 function main() {
