@@ -30,8 +30,11 @@ function main() {
 function getHeroForMatch(match) {
     if (match.match_id != null) {
         var player = getPlayerInMatch(match);
-        if (player != null) {
-            return getHeroById(player.hero_id)[0];
+        if (player != null && player.length = 1) {
+            return getHeroById(player[0].hero_id)[0];
+        } else {
+            //no player exists in that match OR
+            //data is somehow corrupt and there are multiples
         }
     }
 
