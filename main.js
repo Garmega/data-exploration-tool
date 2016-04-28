@@ -30,7 +30,7 @@ function main() {
 function getHeroForMatch(match) {
     if (match.match_id != null) {
         var player = getPlayerInMatch(match);
-        if (player != null && player.length = 1) {
+        if (player != null && player.length == 1) {
             return getHeroById(player[0].hero_id)[0];
         } else {
             //no player exists in that match OR
