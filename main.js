@@ -45,7 +45,7 @@ function getHeroById(id) {
 }
 
 function getPlayerInMatch(match) {
-    $.grep(match, function(n,i) {
+    $.grep(match.players, function(n,i) {
         return n.account_id == accountId;
     });
 }
