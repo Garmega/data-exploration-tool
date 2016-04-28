@@ -31,7 +31,7 @@ function getHeroForMatch(match) {
     if (match.match_id != null) {
         var player = getPlayerInMatch(match);
         if (player != null) {
-            return getHeroById(player.hero_id);
+            return getHeroById(player.hero_id)[0];
         }
     }
 
