@@ -15,15 +15,21 @@ function loadData() {
             heroes = json.heroes;
         })
     ).then(function() {
+        console.log("We are ready!");
         main();
     });
 }
 
 function main() {
-    console.log("We are ready!");
 
-    for (var i = 0; i < 10; i++) {
-        console.log(getHeroForMatch(matches[i]));
+    findAllPlayedHeroes();
+    console.log(playedHeroes);
+}
+
+function findAllPlayedHeroes() {
+    var playedHeroes = [];
+    for (var i = 0; i < matches.length; i++) {
+        playedHeroes.push(getHeroForMatch(matches[i]));
     }
 }
 
