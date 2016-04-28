@@ -1,6 +1,6 @@
 var matches;
 var heroes;
-var accountId = "65406320";
+var accountId = 65406320;
 
 $ ( document ).ready(function() {
     loadData();
@@ -29,11 +29,9 @@ function main() {
 
 function getHeroForMatch(match) {
     if (match.match_id != null) {
-        var players = match.players;
-        for (var i = 0; i < players.length; i++) {
-            if (players.account_id == accountId) {
-                return getHeroById(players.hero_id);
-            }
+        var player = getPlayerInMatch(match);
+        if (player != null) {
+            return getHeroById(player.hero_id);
         }
     }
 
@@ -41,5 +39,13 @@ function getHeroForMatch(match) {
 }
 
 function getHeroById(id) {
-    return heroes[id - 1];
+    $.grep(heroes, function(n,i) {
+        return n.id == 86
+    });
+}
+
+function getPlayerInMatch(match) {
+    $.grep(match, function(n,i) {
+        return n.account_id == accountId;
+    });
 }
