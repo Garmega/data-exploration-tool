@@ -1,3 +1,6 @@
+var matchInfo;
+var heroInfo;
+
 $ ( document ).ready(function() {
     main();
 });
@@ -6,6 +9,17 @@ $ ( document ).ready(function() {
 function main() {
     console.log("We are ready!");
     $.getJSON('playerdata.json', function(json) {
-        console.log(json);
+        matchInfo = json;
+        console.log(matchInfo);
     })
+
+    $.getJSON('herodata.json', function(json) {
+        heroInfo = json;
+        console.log(heroInfo);
+    })
+
+}
+
+function getHeroForMatch() {
+
 }
