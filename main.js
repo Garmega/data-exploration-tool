@@ -39,13 +39,13 @@ function getHeroForMatch(match) {
 }
 
 function getHeroById(id) {
-    $.grep(heroes, function(n,i) {
+    return $.grep(heroes, function(n,i) {
         return n.id == 86
     });
 }
 
 function getPlayerInMatch(match) {
-    $.grep(match.players, function(n,i) {
+    return $.grep(match.players, function(n,i) {
         return n.account_id == accountId;
     });
 }
