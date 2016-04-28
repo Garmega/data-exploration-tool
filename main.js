@@ -1,6 +1,8 @@
 var matches;
 var heroes;
 var accountId = 65406320;
+var playedHeroes = [];
+
 
 $ ( document ).ready(function() {
     loadData();
@@ -27,7 +29,6 @@ function main() {
 }
 
 function findAllPlayedHeroes() {
-    var playedHeroes = [];
     for (var i = 0; i < matches.length; i++) {
         playedHeroes.push(getHeroForMatch(matches[i]));
     }
