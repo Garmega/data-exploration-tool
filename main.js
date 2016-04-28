@@ -30,7 +30,7 @@ function main() {
 }
 
 function getHeroForMatch(match) {
-    if (match_id != null) {
+    if (match.match_id != null) {
         var players = match.players;
         for (var i = 0; i < players.length; i++) {
             if (players.account_id == accountId) {
