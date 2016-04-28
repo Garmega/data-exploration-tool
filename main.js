@@ -10,11 +10,9 @@ function loadData() {
     $.when(
         $.getJSON('playerdata.json', function(json) {
             matches = json.matches;
-            console.log(matches);
         }),
         $.getJSON('herodata.json', function(json) {
             heroes = json.heroes;
-            console.log(heroes);
         })
     ).then(function() {
         main();
@@ -25,7 +23,7 @@ function main() {
     console.log("We are ready!");
 
     for (var i = 0; i < 10; i++) {
-        getHeroForMatch(matches[i]);
+        console.log(getHeroForMatch(matches[i]));
     }
 }
 
