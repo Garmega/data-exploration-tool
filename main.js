@@ -72,7 +72,7 @@ function draw(data) {
         .attr('fill', 'blue')
         .attr('cy', height)
 		.style('opacity', .3)
-		.attr('title', function(d) {return d.localized_name);
+		.attr('title', function(d) {return d.localized_name});
 
     circles.transition()
         .duration(1500)
