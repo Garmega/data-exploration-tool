@@ -57,13 +57,15 @@ function draw(data) {
         .domain([xMin, xMax]);
 
 
-    var heroes = [];
+    var heroNames = [];
 
     for (var i = 0; i < data.length; i++) {
-        heroes.push(data.localized_name);
+        heroNames.push(data.localized_name);
     }
 
     var yScale = d3.scale.ordinal()
+        .domain(heroNames)
+        .range([0, height])
 
     var circles = g.selectAll('circle').data(data);
 
@@ -78,7 +80,7 @@ function draw(data) {
         .duration(1500)
         .delay(function(d,i) {return i * 50})
         .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))} )
-        .attr('cy', function(d) { return d.localized_name})
+        .attr('cy', function(d) { return yScale(d.localized_name)})
 }
 
 /*
