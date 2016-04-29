@@ -13,10 +13,10 @@ $(document).ready(function() {
 function loadData() {
     $.when(
         $.getJSON('playerdata.json', function(json) {
-            matches = json.matches;
+            matchList = json.matches;
         }),
         $.getJSON('herodata.json', function(json) {
-            heroes = json.heroes;
+            heroList = json.heroes;
         })
     ).then(function() {
         console.log("We are ready!");
