@@ -65,7 +65,7 @@ function draw(data) {
 
     var yScale = d3.scale.ordinal()
         .domain(heroNames)
-        .range([0, height])
+        .rangeBands([0, height] .2)
 
     var circles = g.selectAll('circle').data(data);
 
