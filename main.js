@@ -29,29 +29,56 @@ function main() {
 }
 
 function draw(data) {
-    var svg = d3.select('container')
+    var svg = d3.select('#container')
         .append('svg')
-        .append('height', 600)
-        .append('width', 600);
+        .attr('height', 1000)
+        .attr('width', 1000);
 
     var margin = {
-        left: 250,
+        left: 70,
         bottom: 100,
         top: 50,
         right: 50
     };
 
-    var height = 600 - margin.bottom - margin.top;
-	var width = 600 - margin.left - margin.right;
+    var height = 1000 - margin.bottom - margin.top;
+	var width = 1000 - margin.left - margin.right;
 
     var g = svg.append('g')
 				.attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')')
 				.attr('height', height)
 				.attr('width', width);
 
-    var xMax =d3.max(data, function(d){return (d.win + d.lose)/d.win})*1.05;
-	var xMin =d3.min(data, function(d){return (d.win + d.lose)/d.win})*.85;
-	var xScale  = d3.scale.log().range([0, width]).domain([xMin, xMax]);
+    var xMax =d3.max(data, function(d){return d.win/(d.win + d.lose)})*1.05;
+	var xMin =d3.min(data, function(d){return d.win/(d.win + d.lose)})*.85;
+
+	var xScale  = d3.scale.linear()
+        .range([0, width])
+        .domain([xMin, xMax]);
+
+
+    var heroes = [];
+
+    for (var i = 0; i < data.length; i++) {
+        heroes.push(data.localized_name);
+    }
+
+    var yScale = d3.scale.ordinal()
+
+    var circles = g.selectAll('circle').data(data);
+
+    circles.enter().append('circle')
+        .attr('r', function(d) { return (d.win + d.lose) *2 })
+        .attr('fill', 'blue')
+        .attr('cy', height)
+		.style('opacity', .3)
+		.attr('title', function(d) {return d.localized_name);
+
+    circles.transition()
+        .duration(1500)
+        .delay(function(d,i) {return i * 50})
+        .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))} )
+        .attr('cy', function(d) { return d.localized_name})
 }
 
 /*
@@ -84,16 +111,16 @@ function getHeroWinLoseCounts(matches) {
     var results = [];
     for (var i = 0; i < matches.length; i++) {
         var hero = getHeroForMatch(matches[i]);
-        var heroId = hero.id;
         var win = determineWin(matches[i]);
 
         var data = $.grep(results, function(n, i) {
-            return n.hero_id == heroId;
+            return n.hero_id == hero.id;
         })[0];
 
         if (data == null) {
             data = {};
-            data.hero_id = heroId;
+            data.localized_name = hero.localized_name;
+            data.hero_id = hero.id;
             data.win = 0;
             data.lose = 0;
             results.push(data);
