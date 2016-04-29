@@ -2,6 +2,8 @@ var matchList;
 var heroList;
 var accountId = 65406320;
 
+var anonymousId = 4294967295;
+
 
 var playedHeroes;
 
@@ -49,6 +51,12 @@ function findAllPlayedHeroes(matches) {
     }
 
     return results;
+}
+
+function determineWin(match) {
+    if (match.match_id != null) {
+
+    }
 }
 
 /*
