@@ -1,5 +1,7 @@
 var matchList;
 var heroList;
+
+var rawList;
 var accountId = 65406320;
 
 var anonymousId = 4294967295;
@@ -19,6 +21,9 @@ function loadData() {
         }),
         $.getJSON('herodata.json', function(json) {
             heroList = json.heroes;
+        }),
+        $.getJSON('rawdata.json', function(json) {
+            heroList = json.result;
         })
     ).then(function() {
         console.log("We are ready!");
