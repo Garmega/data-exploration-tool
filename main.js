@@ -1,14 +1,8 @@
 var matchList;
 var heroList;
 
-var rawList;
 var accountId = 65406320;
-
 var anonymousId = 4294967295;
-
-
-var playedHeroes;
-
 
 $(document).ready(function() {
     loadData();
@@ -29,11 +23,9 @@ function loadData() {
 }
 
 function main() {
-
-    playedHeroes = findAllPlayedHeroes(matchList);
-    console.log(playedHeroes);
+    var results = getHeroWinLoseCounts(matchList);
+    console.log(results);
 }
-
 
 /*
 Gets all the played heroes and how many times playedHeroes
@@ -55,10 +47,69 @@ function findAllPlayedHeroes(matches) {
     return results;
 }
 
+/*
+@params matches: The matches to which to count with
+
+@returns An array of objects each of which contains
+a unique hero id followed by the win and lose count with that hero
+*/
+function getHeroWinLoseCounts(matches) {
+    var results = [];
+    for (var i = 0; i < matches.length; i++) {
+        var hero = getHeroForMatch(matches[i]);
+        var heroId = hero.id;
+        var win = determineWin(matches[i]);
+
+        var data = $.grep(results, function(n, i) {
+            return n.hero_id == heroId;
+        })[0];
+
+        if (data == null) {
+            data = {};
+            data.hero_id = heroId;
+            data.win = 0;
+            data.lose = 0;
+            results.push(data);
+        }
+
+        if (win) {
+            data.win += 1;
+        } else {
+            data.lose += 1;
+        }
+    }
+
+    return results;
+}
+
+/*
+@params match: Match in which to determine win
+
+@returns A boolean true if the current player was on the winning
+team for the match. False otherwise. Null if player was not in match
+*/
 function determineWin(match) {
     if (match.match_id != null) {
-
+        var playerAllegience = getPlayerAllegience(match);
+        return (playerAllegience != null)
+            ? (match.radiant_win == playerAllegience)
+            : null;
     }
+
+    return null;
+}
+
+/*
+@params match: Match in which to determine allgeiance
+
+@returns A boolean true if radiant otherwise false for dire.
+Null if the player is not present in the match
+*/
+function getPlayerAllegience(match) {
+    var player = getPlayerInMatch(match);
+    return (player != null)
+        ? (player.player_slot < 5)
+        : null;
 }
 
 /*
