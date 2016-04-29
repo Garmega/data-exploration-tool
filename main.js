@@ -24,14 +24,14 @@ function loadData() {
 
 function main() {
     var results = getHeroWinLoseCounts(matchList);
-    draw(results);
+    //draw(results);
     console.log(results);
 }
 
 function draw(data) {
     var svg = d3.select('#container')
         .append('svg')
-        .attr('height', 1000)
+        .attr('height', 500)
         .attr('width', 1000);
 
     var margin = {
