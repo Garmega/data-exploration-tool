@@ -60,7 +60,7 @@ function draw(data) {
     var heroNames = [];
 
     for (var i = 0; i < data.length; i++) {
-        heroNames.push(data.localized_name);
+        heroNames.push(data[i].localized_name);
     }
 
     var yScale = d3.scale.ordinal()
