@@ -24,7 +24,34 @@ function loadData() {
 
 function main() {
     var results = getHeroWinLoseCounts(matchList);
+    draw(results);
     console.log(results);
+}
+
+function draw(data) {
+    var svg = d3.select('container')
+        .append('svg')
+        .append('height', 600)
+        .append('width', 600);
+
+    var margin = {
+        left: 250,
+        bottom: 100,
+        top: 50,
+        right: 50
+    };
+
+    var height = 600 - margin.bottom - margin.top;
+	var width = 600 - margin.left - margin.right;
+
+    var g = svg.append('g')
+				.attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')')
+				.attr('height', height)
+				.attr('width', width);
+
+    var xMax =d3.max(data, function(d){return (d.win + d.lose)/d.win})*1.05;
+	var xMin =d3.min(data, function(d){return (d.win + d.lose)/d.win})*.85;
+	var xScale  = d3.scale.log().range([0, width]).domain([xMin, xMax]);
 }
 
 /*
