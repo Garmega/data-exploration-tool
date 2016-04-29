@@ -24,7 +24,7 @@ function loadData() {
 
 function main() {
     var results = getHeroWinLoseCounts(matchList);
-    //draw(results);
+    draw(results);
     console.log(results);
 }
 
@@ -41,7 +41,7 @@ function draw(data) {
         right: 50
     };
 
-    var height = 1000 - margin.bottom - margin.top;
+    var height = 500 - margin.bottom - margin.top;
 	var width = 1000 - margin.left - margin.right;
 
     var g = svg.append('g')
