@@ -21,9 +21,6 @@ function loadData() {
         }),
         $.getJSON('herodata.json', function(json) {
             heroList = json.heroes;
-        }),
-        $.getJSON('rawdata.json', function(json) {
-            heroList = json.result;
         })
     ).then(function() {
         console.log("We are ready!");
