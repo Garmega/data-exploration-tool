@@ -1,10 +1,12 @@
-var matches;
-var heroes;
+var matchList;
+var heroList;
 var accountId = 65406320;
-var playedHeroes = [];
 
 
-$ ( document ).ready(function() {
+var playedHeroes;
+
+
+$(document).ready(function() {
     loadData();
 });
 
@@ -24,14 +26,29 @@ function loadData() {
 
 function main() {
 
-    findAllPlayedHeroes();
+    playedHeroes = findAllPlayedHeroes(matchList);
     console.log(playedHeroes);
 }
 
-function findAllPlayedHeroes() {
+
+/*
+Gets all the played heroes and how many times playedHeroes
+for the match data of this player.
+@param matches: Array of match objects
+@returns An map where the the key indicates heroId and the value
+the number of occurances of that hero.
+*/
+function findAllPlayedHeroes(matches) {
+    var results = {};
     for (var i = 0; i < matches.length; i++) {
-        playedHeroes.push(getHeroForMatch(matches[i]));
+        var hero = getHeroForMatch(matches[i]);
+        var heroId = hero.id;
+        var currentCount = results[heroId];
+        var newCount = (currentCount != null) ? currentCount + 1 : 1;
+        results[heroId] = newCount;
     }
+
+    return results;
 }
 
 /*
@@ -60,7 +77,7 @@ Grabs the hero by id from the hero list.
 the first one is return. If none is found than null.
 */
 function getHeroById(id) {
-    var results = $.grep(heroes, function(n,i) {
+    var results = $.grep(heroList, function(n, i) {
         return n.id == id
     });
 
@@ -74,7 +91,7 @@ Grabs the player from the match player list.
 the first one is return. If none is found than null.
 */
 function getPlayerInMatch(match) {
-    var results = $.grep(match.players, function(n,i) {
+    var results = $.grep(match.players, function(n, i) {
         return n.account_id == accountId;
     });
 
