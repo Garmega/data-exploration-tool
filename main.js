@@ -58,7 +58,7 @@ function draw(data) {
     var xAxis = d3.svg.axis()
                 .scale(xScale)
                 .orient('bottom')
-                .ticks(0.1, 's');
+                .tickFormat(d3.format('10%'));
 
     // Append x axis to your SVG, specifying the 'transform' attribute to position it
     svg.append('g')
@@ -80,14 +80,14 @@ function prepareCircles(data, g, xScale, yScale, height, width) {
         .attr('r', function(d) { return (d.win + d.lose) *2 })
         .attr('fill', 'blue')
         .attr('cx', xScale(0.5))
-        .attr('cy', function(d) { return yScale(d.localized_name)}
+        .attr('cy', function(d) { return yScale(d.localized_name)})
 		.style('opacity', .5)
 		.attr('title', function(d) {return d.localized_name});
 
     circles.transition()
         .duration(1500)
         .delay(function(d,i) {return i * 50})
-        .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))} )
+        .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
         .attr('cy', function(d) { return yScale(d.localized_name)});
 
     return circles
