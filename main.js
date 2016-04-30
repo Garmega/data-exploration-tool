@@ -37,9 +37,8 @@ function main() {
 
         var toggleColor = function() {
             console.log("Clicked toggleColor")
-            var currentData = getHeroWinLoseCounts(matchList);
             showHeroType = !showHeroType;
-            draw(currentData)
+            d3.select(this).style("fill", function(d) { return (determineColor(d))});
         }
 
         document.getElementById("toggleColor").onclick = toggleColor;
@@ -63,6 +62,17 @@ function main() {
 
         var height = 500 - margin.bottom - margin.top;
         var width = 1000 - margin.left - margin.right;
+
+        // Append x axis to your SVG, specifying the 'transform' attribute to position it
+        var xAxisLabel = svg.append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + (height + margin.top) + ')')
+            .attr('class', 'axis');
+
+        // Add a title g for the x axis
+        var yAxisLabel = svg.append('text')
+            .attr('transform', 'translate(' + (margin.left + width/2) + ',' + (height + margin.top + 40) + ')')
+            .attr('class', 'title')
+            .text('Win Percentile');
 
         var setScales = function(data) {
             var xMax =d3.max(data, function(d){return d.win/(d.win + d.lose)})*1.05;
@@ -88,17 +98,8 @@ function main() {
                         .scale(xScale)
                         .orient('bottom')
                         .tickFormat(d3.format('10%'));
-            // Append x axis to your SVG, specifying the 'transform' attribute to position it
-            svg.append('g')
-                .attr('transform', 'translate(' + margin.left + ',' + (height + margin.top) + ')')
-                .attr('class', 'axis')
-                .call(xAxis);
 
-            // Add a title g for the x axis
-            svg.append('text')
-                .attr('transform', 'translate(' + (margin.left + width/2) + ',' + (height + margin.top + 40) + ')')
-                .attr('class', 'title')
-                .text('Win Percentile');
+            xAxisLabel.call(xAxis);
         }
 
         var draw = function(data) {
@@ -114,6 +115,8 @@ function main() {
                 .attr('cy', function(d) { return yScale(d.localized_name)})
         		.style('opacity', .5)
         		.attr('title', function(d) {return d.localized_name + "\nWin: " + d.win + " Lose: " + d.lose});
+
+            circles.exit().remove();
 
             circles.transition()
                 .duration(1500)
