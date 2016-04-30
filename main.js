@@ -34,14 +34,7 @@ function main() {
 
         var xScale;
         var yScale;
-
-        var toggleColor = function() {
-            console.log("Clicked toggleColor")
-            showHeroType = !showHeroType;
-            d3.select(this).style("fill", function(d) { return (determineColor(d))});
-        }
-
-        document.getElementById("toggleColor").onclick = toggleColor;
+        var circles;
 
         var svg = d3.select('#chart')
             .append('svg')
@@ -106,11 +99,11 @@ function main() {
             setScales(data);
             setAxes();
 
-            var circles = g.selectAll('circle').data(data);
+            circles = g.selectAll('circle').data(data);
 
             circles.enter().append('circle')
                 .attr('r', function(d) { return (d.win + d.lose) * 3 })
-                .attr('fill', function(d) { return (determineColor(d))})
+                .style('fill', function(d) { return (determineColor(d))})
                 .attr('cx', xScale(0.5))
                 .attr('cy', function(d) { return yScale(d.localized_name)})
         		.style('opacity', .5)
@@ -127,6 +120,14 @@ function main() {
 
         var currentData = getHeroWinLoseCounts(matchList);
         draw(currentData)
+
+        var toggleColor = function() {
+            console.log("Clicked toggleColor")
+            showHeroType = !showHeroType;
+            circles.style('fill', function(d) { return (determineColor(d))});
+        }
+
+        document.getElementById("toggleColor").onclick = toggleColor;
 
         $("circle").tooltip({
             'container': 'body',
