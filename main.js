@@ -82,12 +82,22 @@ function draw(data) {
         .text('Win Percentile');
 }
 
+function determineColor(hero) {
+    if (hero.attribute_type == 'intelligence') {
+        return 'blue';
+    } else if (hero.attribute_type == 'agility') {
+        return 'green';
+    } else {
+        return 'red';
+    }
+}
+
 function prepareCircles(data, g, xScale, yScale, height, width) {
     var circles = g.selectAll('circle').data(data);
 
     circles.enter().append('circle')
         .attr('r', function(d) { return (d.win + d.lose) * 3 })
-        .attr('fill', 'blue')
+        .attr('fill', function(d) { return (determineColor(hero))})
         .attr('cx', xScale(0.5))
         .attr('cy', function(d) { return yScale(d.localized_name)})
 		.style('opacity', .5)
