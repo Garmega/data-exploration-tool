@@ -100,7 +100,7 @@ function main() {
             circles = g.selectAll('circle').data(data);
 
             circles.enter().append('circle')
-                .attr('r', function(d) { return (d.win + d.lose) * 3 })
+                .attr('r', function(d) { return 7 })
                 .style('fill', function(d) { return (determineColor(d))})
                 .attr('cx', xScale(0.5))
                 .attr('cy', function(d) { return yScale(d.localized_name)})
@@ -136,10 +136,17 @@ function main() {
             var sizeFunction = null;
             if (showMatchCount) {
                 sizeFunction = function(d) { return (d.win + d.lose) * 3 };
+            } else {
+                sizeFunction = function(d) { return 7 };
             }
             circles.transition()
                 .duration(500)
-                .attr('r', sizeFunction);
+                .attr('r', sizeFunction).
+                //These two are necessary in case this is fired before
+                //the initial drawing is complete. This will instant complete
+                //the previous transition and toggle the color
+                .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
+                .attr('cy', function(d) { return yScale(d.localized_name)});
         }
 
         document.getElementById("toggleColor").onclick = toggleColor;
