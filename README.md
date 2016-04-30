@@ -1,3 +1,6 @@
+LIVE LINK:
+http://garmega.github.io/
+
 NOTE: The API that I had built this on has been unstable for the last few days. As a result
 I downloaded data and loaded it in as a JSON file. Unfortunately because of this, there is
 only 100 matches to pull this data from and therefore makes the visualization a little
