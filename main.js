@@ -141,7 +141,7 @@ function main() {
             }
             circles.transition()
                 .duration(500)
-                .attr('r', sizeFunction).
+                .attr('r', sizeFunction)
                 //These two are necessary in case this is fired before
                 //the initial drawing is complete. This will instant complete
                 //the previous transition and toggle the color
