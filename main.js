@@ -126,7 +126,9 @@ function main() {
             showHeroType = !showHeroType;
             circles.transition()
                 .duration(500)
-                .style('fill', function(d) { return (determineColor(d))});
+                .style('fill', function(d) { return (determineColor(d))})
+                .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
+                .attr('cy', function(d) { return yScale(d.localized_name)});
         }
 
         document.getElementById("toggleColor").onclick = toggleColor;
