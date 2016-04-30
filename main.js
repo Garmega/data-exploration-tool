@@ -19,10 +19,10 @@ function loadData() {
     ).then(function() {
         console.log("We are ready!");
         var firstToggle = document.getElementById("firstToggle");
-        firstToggle.onclick = clicked();
+        firstToggle.onclick = clicked;
 
         var secondToggle = document.getElementById("secondToggle");
-        secondToggle.onclick = clicked();
+        secondToggle.onclick = clicked;
         main();
     });
 }
