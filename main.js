@@ -124,9 +124,9 @@ function main() {
         var toggleColor = function() {
             console.log("Clicked toggleColor")
             showHeroType = !showHeroType;
-            circles.style('fill', function(d) { return (determineColor(d))});
             circles.transition()
-                .duration(1500)
+                .duration(500)
+                .style('fill', function(d) { return (determineColor(d))});
         }
 
         document.getElementById("toggleColor").onclick = toggleColor;
