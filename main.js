@@ -4,6 +4,8 @@ var heroList;
 var accountId = 65406320;
 var anonymousId = 4294967295;
 
+var showHeroType = false;
+
 $(document).ready(function() {
     loadData();
 });
@@ -18,8 +20,7 @@ function loadData() {
         })
     ).then(function() {
         console.log("We are ready!");
-        var firstToggle = document.getElementById("firstToggle");
-        firstToggle.onclick = clicked;
+        document.getElementById("toggleColor").onclick = toggleColor;
 
         var secondToggle = document.getElementById("secondToggle");
         secondToggle.onclick = clicked;
@@ -27,8 +28,8 @@ function loadData() {
     });
 }
 
-function clicked() {
-    console.log("CLICKED")
+function toggleColor() {
+    showHeroType = !showHeroType;
 }
 
 function main() {
@@ -83,7 +84,9 @@ function draw(data) {
 }
 
 function determineColor(hero) {
-    if (hero.attribute_type == 'intelligence') {
+    if (!showHeroType) {
+        return 'black';
+    } else if (hero.attribute_type == 'intelligence') {
         return 'blue';
     } else if (hero.attribute_type == 'agility') {
         return 'green';
@@ -97,7 +100,7 @@ function prepareCircles(data, g, xScale, yScale, height, width) {
 
     circles.enter().append('circle')
         .attr('r', function(d) { return (d.win + d.lose) * 3 })
-        .attr('fill', function(d) { return (determineColor(hero))})
+        .attr('fill', function(d) { return (determineColor(d))})
         .attr('cx', xScale(0.5))
         .attr('cy', function(d) { return yScale(d.localized_name)})
 		.style('opacity', .5)
@@ -189,6 +192,7 @@ function getHeroWinLoseCounts(matches) {
 
         if (data == null) {
             data = {};
+            data.attribute_type = hero.attribute_type;
             data.localized_name = hero.localized_name;
             data.hero_id = hero.id;
             data.win = 0;
