@@ -18,8 +18,17 @@ function loadData() {
         })
     ).then(function() {
         console.log("We are ready!");
+        var firstToggle = document.getElementById("firstToggle");
+        firstToggle.onclick = clicked();
+
+        var secondToggle = document.getElementById("secondToggle");
+        secondToggle.onclick = clicked();
         main();
     });
+}
+
+function clicked() {
+    console.log("CLICKED")
 }
 
 function main() {
@@ -89,6 +98,12 @@ function prepareCircles(data, g, xScale, yScale, height, width) {
         .delay(function(d,i) {return i * 50})
         .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
         .attr('cy', function(d) { return yScale(d.localized_name)});
+
+    $("circle").tooltip({
+        'container': 'body',
+        'placement': 'bottom',
+        'content' : 'Test'
+    });
 
     return circles
 }
