@@ -5,6 +5,7 @@ var accountId = 65406320;
 var anonymousId = 4294967295;
 
 var showHeroType = false;
+var showMatchCount = false;
 
 $(document).ready(function() {
     loadData();
@@ -20,9 +21,6 @@ function loadData() {
         })
     ).then(function() {
         console.log("We are ready!");
-
-        // var secondToggle = document.getElementById("secondToggle");
-        // secondToggle.onclick = clicked;
         main();
     });
 }
@@ -112,7 +110,7 @@ function main() {
             circles.exit().remove();
 
             circles.transition()
-                .duration(1500)
+                .duration(1000)
                 .delay(function(d,i) {return i * 50})
                 .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
                 .attr('cy', function(d) { return yScale(d.localized_name)});
@@ -122,17 +120,32 @@ function main() {
         draw(currentData)
 
         var toggleColor = function() {
-            console.log("Clicked toggleColor")
             showHeroType = !showHeroType;
             circles.transition()
                 .duration(500)
                 .style('fill', function(d) { return (determineColor(d))})
+                //These two are necessary in case this is fired before
+                //the initial drawing is complete. This will instant complete
+                //the previous transition and toggle the color
                 .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
                 .attr('cy', function(d) { return yScale(d.localized_name)});
         }
 
-        document.getElementById("toggleColor").onclick = toggleColor;
+        var resize = function() {
+            showMatchCount = !showMatchCount;
+            var sizeFunction = null;
+            if (showMatchCount) {
+                sizeFunction = function(d) { return (d.win + d.lose) * 3 };
+            }
+            circles.transition()
+                .duration(500)
+                .attr('r', sizeFunction);
+        }
 
+        document.getElementById("toggleColor").onclick = toggleColor;
+        document.getElementById("toggleSize").onclick = resize;
+        // Hi Chennan.
+        // Love, Drunk Hyytek, who can somehow still comprehend spelling and shit.
         $("circle").tooltip({
             'container': 'body',
             'placement': 'bottom',
