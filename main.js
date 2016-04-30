@@ -86,12 +86,12 @@ function prepareCircles(data, g, xScale, yScale, height, width) {
     var circles = g.selectAll('circle').data(data);
 
     circles.enter().append('circle')
-        .attr('r', function(d) { return (d.win + d.lose) *2 })
+        .attr('r', function(d) { return (d.win + d.lose) * 3 })
         .attr('fill', 'blue')
         .attr('cx', xScale(0.5))
         .attr('cy', function(d) { return yScale(d.localized_name)})
 		.style('opacity', .5)
-		.attr('title', function(d) {return d.localized_name});
+		.attr('title', function(d) {return d.localized_name + "\nWin: " + d.win + " Lose: " + d.lose});
 
     circles.transition()
         .duration(1500)
@@ -102,7 +102,6 @@ function prepareCircles(data, g, xScale, yScale, height, width) {
     $("circle").tooltip({
         'container': 'body',
         'placement': 'bottom',
-        'content' : 'Test'
     });
 
     return circles
