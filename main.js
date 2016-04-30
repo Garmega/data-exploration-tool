@@ -29,7 +29,7 @@ function main() {
 }
 
 function draw(data) {
-    var svg = d3.select('#container')
+    var svg = d3.select('#chart')
         .append('svg')
         .attr('height', 500)
         .attr('width', 1000);
