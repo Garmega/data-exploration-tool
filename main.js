@@ -35,13 +35,14 @@ function main() {
         var xScale;
         var yScale;
 
-        document.getElementById("toggleColor").onclick = toggleColor;
-
         var toggleColor = function() {
+            console.log("Clicked toggleColor")
             var currentData = getHeroWinLoseCounts(matchList);
             showHeroType = !showHeroType;
             draw(currentData)
         }
+
+        document.getElementById("toggleColor").onclick = toggleColor;
 
         var svg = d3.select('#chart')
             .append('svg')
