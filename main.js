@@ -2,7 +2,6 @@ var matchList;
 var heroList;
 
 var accountId = 65406320;
-var anonymousId = 4294967295;
 
 var showHeroType = false;
 var showMatchCount = false;
@@ -25,46 +24,51 @@ function loadData() {
     });
 }
 
-
 function main() {
-
     d3.json('herodata.json', function(json) {
 
         var xScale;
         var yScale;
         var circles;
 
+        //Adds SVG to div on page.
         var svg = d3.select('#chart')
             .append('svg')
             .attr('height', 500)
             .attr('width', 1000);
 
+        //Sets margins
         var margin = {
-            left: 250,
+            left: 50,
             bottom: 100,
             top: 50,
             right: 50
-        };
+        }
 
+        //Calculates the chart size
+        var height = 500 - margin.bottom - margin.top;
+        var width = 1000 - margin.left - margin.right;
+
+        //Adds the chart canva and moves it accordingly
         var g = svg.append('g')
                     .attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')')
                     .attr('height', height)
                     .attr('width', width);
 
-        var height = 500 - margin.bottom - margin.top;
-        var width = 1000 - margin.left - margin.right;
-
-        // Append x axis to your SVG, specifying the 'transform' attribute to position it
+        //Makes the x axis label and appends it
         var xAxisLabel = svg.append('g')
             .attr('transform', 'translate(' + margin.left + ',' + (height + margin.top) + ')')
             .attr('class', 'axis');
 
-        // Add a title g for the x axis
+        //Makes the x axis label and appends it
         var yAxisLabel = svg.append('text')
             .attr('transform', 'translate(' + (margin.left + width/2) + ',' + (height + margin.top + 40) + ')')
             .attr('class', 'title')
             .text('Win Percentile');
 
+        /*
+        Sets the scales for the chart
+        */
         var setScales = function(data) {
             var xMax =d3.max(data, function(d){return d.win/(d.win + d.lose)})*1.05;
             var xMin =d3.min(data, function(d){return d.win/(d.win + d.lose)}) -.05;
@@ -73,6 +77,7 @@ function main() {
                 .range([0, width])
                 .domain([xMin, xMax]);
 
+            //Yscale is arbitrarily ordinal so make it as large as there are unique heroes
             var heroNames = [];
             for (var i = 0; i < data.length; i++) {
                 heroNames.push(data[i].localized_name);
@@ -83,6 +88,9 @@ function main() {
                 .rangeBands([0, height], .2);
         }
 
+        /*
+        Sets the axes of the chart
+        */
         var setAxes = function() {
             // Define x axis using d3.svg.axis(), assigning the scale as the xScale
             var xAxis = d3.svg.axis()
@@ -119,18 +127,24 @@ function main() {
         var currentData = getHeroWinLoseCounts(matchList);
         draw(currentData)
 
+        /*
+        On click event to show or hide the hero type for each circle.
+        */
         var toggleColor = function() {
             showHeroType = !showHeroType;
             circles.transition()
                 .duration(500)
                 .style('fill', function(d) { return (determineColor(d))})
-                //These two are necessary in case this is fired before
-                //the initial drawing is complete. This will instant complete
+                //The bottom two are necessary in case this is fired before
+                //the initial drawing is complete. This will instantly complete
                 //the previous transition and toggle the color
                 .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
                 .attr('cy', function(d) { return yScale(d.localized_name)});
         }
 
+        /*
+        On click event that causes the circles to resize to hide or show density
+        */
         var resize = function() {
             showMatchCount = !showMatchCount;
             var sizeFunction = null;
@@ -142,8 +156,8 @@ function main() {
             circles.transition()
                 .duration(500)
                 .attr('r', sizeFunction)
-                //These two are necessary in case this is fired before
-                //the initial drawing is complete. This will instant complete
+                //The bottom two are necessary in case this is fired before
+                //the initial drawing is complete. This will instantly complete
                 //the previous transition and toggle the color
                 .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
                 .attr('cy', function(d) { return yScale(d.localized_name)});
