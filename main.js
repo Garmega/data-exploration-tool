@@ -20,67 +20,115 @@ function loadData() {
         })
     ).then(function() {
         console.log("We are ready!");
-        document.getElementById("toggleColor").onclick = toggleColor;
 
-        var secondToggle = document.getElementById("secondToggle");
-        secondToggle.onclick = clicked;
+        // var secondToggle = document.getElementById("secondToggle");
+        // secondToggle.onclick = clicked;
         main();
     });
 }
 
-function toggleColor() {
-    showHeroType = !showHeroType;
-}
 
 function main() {
-    var results = getHeroWinLoseCounts(matchList);
-    draw(results);
-    console.log(results);
-}
 
-function draw(data) {
-    var svg = d3.select('#chart')
-        .append('svg')
-        .attr('height', 500)
-        .attr('width', 1000);
+    d3.json('herodata.json', function(json) {
 
-    var margin = {
-        left: 250,
-        bottom: 100,
-        top: 50,
-        right: 50
-    };
+        var xScale;
+        var yScale;
 
-    var height = 500 - margin.bottom - margin.top;
-	var width = 1000 - margin.left - margin.right;
+        document.getElementById("toggleColor").onclick = toggleColor;
 
-    var g = svg.append('g')
-				.attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')')
-				.attr('height', height)
-				.attr('width', width);
+        var toggleColor = function() {
+            var currentData = getHeroWinLoseCounts(matchList);
+            showHeroType = !showHeroType;
+            draw(currentData)
+        }
 
-	var xScale = setXScale(data, width);
-    var yScale = setYScale(data, height);
+        var svg = d3.select('#chart')
+            .append('svg')
+            .attr('height', 500)
+            .attr('width', 1000);
 
-    var circles = prepareCircles(data, g, xScale, yScale, height, width);
+        var margin = {
+            left: 250,
+            bottom: 100,
+            top: 50,
+            right: 50
+        };
 
-    // Define x axis using d3.svg.axis(), assigning the scale as the xScale
-    var xAxis = d3.svg.axis()
-                .scale(xScale)
-                .orient('bottom')
-                .tickFormat(d3.format('10%'));
+        var g = svg.append('g')
+                    .attr('transform', 'translate(' +  margin.left + ',' + margin.top + ')')
+                    .attr('height', height)
+                    .attr('width', width);
 
-    // Append x axis to your SVG, specifying the 'transform' attribute to position it
-    svg.append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + (height + margin.top) + ')')
-        .attr('class', 'axis')
-        .call(xAxis);
+        var height = 500 - margin.bottom - margin.top;
+        var width = 1000 - margin.left - margin.right;
 
-    // Add a title g for the x axis
-    svg.append('text')
-        .attr('transform', 'translate(' + (margin.left + width/2) + ',' + (height + margin.top + 40) + ')')
-        .attr('class', 'title')
-        .text('Win Percentile');
+        var setScales = function(data) {
+            var xMax =d3.max(data, function(d){return d.win/(d.win + d.lose)})*1.05;
+            var xMin =d3.min(data, function(d){return d.win/(d.win + d.lose)}) -.05;
+
+            xScale = d3.scale.linear()
+                .range([0, width])
+                .domain([xMin, xMax]);
+
+            var heroNames = [];
+            for (var i = 0; i < data.length; i++) {
+                heroNames.push(data[i].localized_name);
+            }
+
+            yScale = d3.scale.ordinal()
+                .domain(heroNames)
+                .rangeBands([0, height], .2);
+        }
+
+        var setAxes = function() {
+            // Define x axis using d3.svg.axis(), assigning the scale as the xScale
+            var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient('bottom')
+                        .tickFormat(d3.format('10%'));
+            // Append x axis to your SVG, specifying the 'transform' attribute to position it
+            svg.append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + (height + margin.top) + ')')
+                .attr('class', 'axis')
+                .call(xAxis);
+
+            // Add a title g for the x axis
+            svg.append('text')
+                .attr('transform', 'translate(' + (margin.left + width/2) + ',' + (height + margin.top + 40) + ')')
+                .attr('class', 'title')
+                .text('Win Percentile');
+        }
+
+        var draw = function(data) {
+            setScales(data);
+            setAxes();
+
+            var circles = g.selectAll('circle').data(data);
+
+            circles.enter().append('circle')
+                .attr('r', function(d) { return (d.win + d.lose) * 3 })
+                .attr('fill', function(d) { return (determineColor(d))})
+                .attr('cx', xScale(0.5))
+                .attr('cy', function(d) { return yScale(d.localized_name)})
+        		.style('opacity', .5)
+        		.attr('title', function(d) {return d.localized_name + "\nWin: " + d.win + " Lose: " + d.lose});
+
+            circles.transition()
+                .duration(1500)
+                .delay(function(d,i) {return i * 50})
+                .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
+                .attr('cy', function(d) { return yScale(d.localized_name)});
+        }
+
+        var currentData = getHeroWinLoseCounts(matchList);
+        draw(currentData)
+
+        $("circle").tooltip({
+            'container': 'body',
+            'placement': 'bottom',
+        });
+    });
 }
 
 function determineColor(hero) {
@@ -93,65 +141,6 @@ function determineColor(hero) {
     } else {
         return 'red';
     }
-}
-
-function prepareCircles(data, g, xScale, yScale, height, width) {
-    var circles = g.selectAll('circle').data(data);
-
-    circles.enter().append('circle')
-        .attr('r', function(d) { return (d.win + d.lose) * 3 })
-        .attr('fill', function(d) { return (determineColor(d))})
-        .attr('cx', xScale(0.5))
-        .attr('cy', function(d) { return yScale(d.localized_name)})
-		.style('opacity', .5)
-		.attr('title', function(d) {return d.localized_name + "\nWin: " + d.win + " Lose: " + d.lose});
-
-    circles.transition()
-        .duration(1500)
-        .delay(function(d,i) {return i * 50})
-        .attr('cx', function(d) { return xScale(d.win/(d.win + d.lose))})
-        .attr('cy', function(d) { return yScale(d.localized_name)});
-
-    $("circle").tooltip({
-        'container': 'body',
-        'placement': 'bottom',
-    });
-
-    return circles
-}
-
-/*
-Gets a d3 linear scale based on win lose rate
-@params data: In the form of an array of hero-win-lose count objects
-@params width: Width of the axis
-
-@returns a d3 linear scale oriented horizontally
-*/
-function setXScale(data, width) {
-    var xMax =d3.max(data, function(d){return d.win/(d.win + d.lose)})*1.05;
-    var xMin =d3.min(data, function(d){return d.win/(d.win + d.lose)}) -.05;
-
-    return d3.scale.linear()
-        .range([0, width])
-        .domain([xMin, xMax]);
-}
-
-/*
-Gets a d3 ordinal scale based on hero name
-@params data: In the form of an array of hero win-lose count objects
-@params height: Height of the axis
-
-@returns A d3 ordinal scale oriented vertically
-*/
-function setYScale(data, height) {
-    var heroNames = [];
-    for (var i = 0; i < data.length; i++) {
-        heroNames.push(data[i].localized_name);
-    }
-
-    return d3.scale.ordinal()
-        .domain(heroNames)
-        .rangeBands([0, height], .2);
 }
 
 /*
